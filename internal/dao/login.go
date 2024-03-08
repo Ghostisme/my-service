@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"my-project-admin-service/internal/model"
+	"my-service/internal/model"
 )
 
 /**

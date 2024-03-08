@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"my-project-admin-service/pkg/setting"
+	"my-service/pkg/setting"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"

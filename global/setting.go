@@ -1,7 +1,7 @@
 package global
 
 import (
-	"my-project-admin-service/pkg/setting"
+	"my-service/pkg/setting"
 )
 
 var (

@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"my-project-admin-service/global"
-	"my-project-admin-service/internal/dao"
+	"my-service/global"
+	"my-service/internal/dao"
 )
 
 type Service struct {

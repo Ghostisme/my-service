@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"my-project-admin-service/pkg/errcode"
+	"my-service/pkg/errcode"
 	"net/http"
 	"time"
 

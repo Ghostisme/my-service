@@ -1,10 +1,10 @@
 package routers
 
 import (
-	_ "my-project-admin-service/docs"
-	"my-project-admin-service/global"
-	"my-project-admin-service/internal/middleware"
-	v1 "my-project-admin-service/internal/routers/api/v1"
+	_ "my-service/docs"
+	"my-service/global"
+	"my-service/internal/middleware"
+	v1 "my-service/internal/routers/api/v1"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"

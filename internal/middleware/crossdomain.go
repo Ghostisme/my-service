@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"fmt"
-	"my-project-admin-service/global"
-	"my-project-admin-service/pkg/app"
-	"my-project-admin-service/pkg/errcode"
+	"my-service/global"
+	"my-service/pkg/app"
+	"my-service/pkg/errcode"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,8 +1,8 @@
 package app
 
 import (
-	"my-project-admin-service/global"
-	"my-project-admin-service/pkg/utils"
+	"my-service/global"
+	"my-service/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )

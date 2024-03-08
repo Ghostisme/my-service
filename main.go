@@ -2,11 +2,11 @@ package main
 
 import (
 	"log"
-	"my-project-admin-service/global"
-	"my-project-admin-service/internal/model"
-	"my-project-admin-service/internal/routers"
-	"my-project-admin-service/pkg/logger"
-	"my-project-admin-service/pkg/setting"
+	"my-service/global"
+	"my-service/internal/model"
+	"my-service/internal/routers"
+	"my-service/pkg/logger"
+	"my-service/pkg/setting"
 	"net/http"
 	"strconv"
 	"time"

@@ -1,6 +1,6 @@
 package global
 
-import "my-project-admin-service/pkg/logger"
+import "my-service/pkg/logger"
 
 var (
 	Logger *logger.Logger
