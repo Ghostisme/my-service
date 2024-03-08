@@ -49,12 +49,12 @@ func GetUser(db *gorm.DB, userName, Password string) (uint32, error) {
 	return user.Model.ID, nil
 }
 
-func SetCurrentToken(db *gorm.DB, id uint32, token string) (uint32, error) {
-	db = db.Where("id = ?", id)
-	// 更新用户
-	err := db.Update(&tokenInfo{token}).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return 0, err
-	}
-	return 0, nil
-}
+// func SetCurrentToken(db *gorm.DB, id uint32, token string) (uint32, error) {
+// 	db = db.Where("id = ?", id)
+// 	// 更新用户
+// 	err := db.Update(&tokenInfo{token}).Error
+// 	if err != nil && err != gorm.ErrRecordNotFound {
+// 		return 0, err
+// 	}
+// 	return 0, nil
+// }

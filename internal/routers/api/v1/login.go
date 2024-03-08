@@ -40,6 +40,7 @@ func GetUser(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorUserPasswordError)
 		return
 	}
+	token := "asdasddsaadssadsda"
 	// token, err := app.GenerateToken()
 	// fmt.Printf("当前token%v", token)
 	// if err != nil {
@@ -55,7 +56,7 @@ func GetUser(c *gin.Context) {
 	// 	return
 	// }
 	response.ToResponse(gin.H{
-		"token": "asdadadasd",
+		"token": token,
 	})
 }
 // @Summer 登出

@@ -36,10 +36,10 @@ func (svc *Service) GetUser(userName, Password string) (uint32, error) {
 	return 0, errors.New("user password was erro")
 }
 
-func (svc *Service) SetToken(id uint32, token string) (uint32, error) {
-	res, err := svc.dao.SetToken(id, token)
-	if err != nil {
-		return 0, err
-	}
-	return res, nil
-}
+// func (svc *Service) SetToken(id uint32, token string) (uint32, error) {
+// 	res, err := svc.dao.SetToken(id, token)
+// 	if err != nil {
+// 		return 0, err
+// 	}
+// 	return res, nil
+// }

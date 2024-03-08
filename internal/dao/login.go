@@ -30,6 +30,6 @@ func (d *Dao) GetUser(userName, Password string) (uint32, error) {
  * @param token-登录秘钥
  * @return 0，错误信息
  */
-func (d *Dao) SetToken(id uint32, token string) (uint32, error) {
-	return model.SetCurrentToken(d.engine, id, token)
-}
+// func (d *Dao) SetToken(id uint32, token string) (uint32, error) {
+// 	return model.SetCurrentToken(d.engine, id, token)
+// }
