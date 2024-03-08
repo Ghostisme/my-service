@@ -1,0 +1,22 @@
+DataBase:
+  DBType: mysql
+  UserName: root
+  Password: Woquz159357!
+  Host: localhost:3306
+  DBName: myservice
+  Charset: utf8
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
+App:
+  DefaultPageSize: 10
+  MaxPageSize: 50
+  LogSavePath: logs
+  LogFileName: app
+  LogFileExt: .log
+  UsclientPath: /home/lighthouse/service
+Server:
+  RunMode: release
+  HttpPort: 81
+  ReadTimeOut: 60
+  WriteTimeOut: 60
