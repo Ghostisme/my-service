@@ -25,9 +25,9 @@ type AppSettings struct {
 }
 
 type RedisSettings struct {
-	Addr     string
-	Password string
-	DB       int
+	RedisAddr     string
+	RedisPassword string
+	RedisDB       int
 }
 
 type ServerSettings struct {

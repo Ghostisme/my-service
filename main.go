@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"my-service/global"
 	"my-service/internal/model"
@@ -14,7 +15,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
-
+var ctx = context.Background()
 func setupSetting() error {
 	setting, err := setting.NewSetting()
 	if err != nil {
@@ -51,12 +52,16 @@ func setupSetting() error {
 }
 
 func setupRedisEngine() error {
-	// var err error
+	var err error
 	global.RedisClient = redis.NewClient(&redis.Options{
-		Addr: global.RedisSettings.Addr,
-		Password: global.RedisSettings.Password,
-		DB: global.RedisSettings.DB,
+		Addr: global.RedisSettings.RedisAddr,
+		Password: global.RedisSettings.RedisPassword,
+		DB: global.RedisSettings.RedisDB,
 	})
+	_, err = global.RedisClient.Ping(ctx).Result()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
