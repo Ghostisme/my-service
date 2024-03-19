@@ -30,8 +30,10 @@ func NewRouter() *gin.Engine {
 	{
 		// 登出
 		apiV1.GET("/logout", v1.Logout)
+		// 注册
+		apiV1.POST("/register", )
 		// 获取用户列表
-		apiV1.POST("/user", user.List)
+		apiV1.GET("/user", user.List)
 	}
 
 	return r

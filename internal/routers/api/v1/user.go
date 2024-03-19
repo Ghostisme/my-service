@@ -16,17 +16,17 @@ func NewUser() User {
 
 // @Summer 获取用户列表
 // @Produce json
-// @Param beginTime "开始时间"
-// @Param endTime "结束时间"
-// @Param keyWord "关键词"
-// @Param status "是否有效"
-// @Param page "页码"
-// @Param pageSize ""条数
+// @Param token header string true "token"
+// @Param beginTime query string false "开始时间"
+// @Param endTime query string false "结束时间"
+// @Param keyWord query string false "关键词"
+// @Param status query int true "是否有效"
+// @Param page query int true "页码"
+// @Param pageSize query int true "每页条数"
 // @Success 200 {object} model.UserInfo "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/userlist [post]
-
+// @Router /api/v1/user [post]
 func (u User) List(c *gin.Context) {
 	param := service.UserListRequest{}
 	response := app.NewResponse(c)

@@ -24,6 +24,12 @@ type AppSettings struct {
 	UsclientPath    string
 }
 
+type RedisSettings struct {
+	Addr     string
+	Password string
+	DB       int
+}
+
 type ServerSettings struct {
 	RunMode      string
 	HttpPort     int

@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-redis/redis/v8"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -24,6 +25,10 @@ func setupSetting() error {
 		return err
 	}
 	err = setting.ReadSection("App", &global.AppSettings)
+	if err != nil {
+		return err
+	}
+	err = setting.ReadSection("Redis", &global.RedisSettings)
 	if err != nil {
 		return err
 	}
@@ -42,6 +47,16 @@ func setupSetting() error {
 		global.JWTSettings.Issuer = "myspace"
 		global.JWTSettings.AppSecret = "myspace-us"
 	}
+	return nil
+}
+
+func setupRedisEngine() error {
+	// var err error
+	global.RedisClient = redis.NewClient(&redis.Options{
+		Addr: global.RedisSettings.Addr,
+		Password: global.RedisSettings.Password,
+		DB: global.RedisSettings.DB,
+	})
 	return nil
 }
 
@@ -70,6 +85,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupSettings err: %v", err)
 	}
+	err = setupRedisEngine()
+	if err != nil {
+		log.Fatalf("init.setupRedisEngine err: %v", err)
+	}
 	err = setupDBEngine()
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)
@@ -92,7 +111,6 @@ func main() {
 		WriteTimeout:   global.ServerSettings.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
-
 	global.Logger.Infof("Listening: %v", global.ServerSettings.HttpPort)
 	// go func() {
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -100,3 +118,4 @@ func main() {
 	}
 	// }()
 }
+

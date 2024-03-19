@@ -7,6 +7,7 @@ import (
 var (
 	DBSettings     *setting.DatabaseSettings
 	AppSettings    *setting.AppSettings
+	RedisSettings  *setting.RedisSettings
 	ServerSettings *setting.ServerSettings
 	JWTSettings    *setting.JWTSettings
 	// ZMQSettings    *setting.ZMQSettings

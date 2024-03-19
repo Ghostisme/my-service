@@ -22,3 +22,7 @@ Server:
   WriteTimeOut: 60
 JWT:
   Expire: 7200
+Rides:
+  Addr: localhost:82
+  Password: Woquz1593571!a
+  DB: 0
