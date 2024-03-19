@@ -21,8 +21,18 @@ func NewRouter() *gin.Engine {
 	apiDirect := r.Group("api/v1")
 	{
 		//登录验证
-		apiDirect.POST("/login", v1.GetUser)
+		apiDirect.POST("/login", v1.Login)
 	}
-	global.Logger.Infof("查看login接口数据: %v", v1.GetUser)
+	// global.Logger.Infof("查看login接口数据: %v", v1.GetUser)
+	apiV1 := r.Group("api/v1")
+	user := v1.NewUser()
+	apiV1.Use(middleware.JWT()) // 增加token有效性验证
+	{
+		// 登出
+		apiV1.GET("/logout", v1.Logout)
+		// 获取用户列表
+		apiV1.POST("/user", user.List)
+	}
+
 	return r
 }

@@ -31,6 +31,12 @@ type ServerSettings struct {
 	WriteTimeout time.Duration
 }
 
+type JWTSettings struct {
+	AppSecret string        //秘钥
+	Issuer    string        //签发者
+	Expire    time.Duration //过期时间
+}
+
 // 读取配置文件字段对应内容
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	err := s.VP.UnmarshalKey(k, v)

@@ -1,10 +1,8 @@
 package app
 
 import (
-	"fmt"
 	"my-service/pkg/errcode"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,24 +12,9 @@ type Response struct {
 }
 
 type Pager struct {
-	Page      int `json:"page"`
-	PageSize  int `json:"pageSize"`
-	TotalRows int `json:"totalRows"`
-}
-
-/**
-* @brief 创建用户token
-* @param 
-* @return 回复token
-*/
-func GenerateToken() (string, error) {
-	nowTime := time.Now()
-	expireTime := nowTime.Add(7200)
-
-
-	token, err := fmt.Printf("%v%v", nowTime, expireTime)
-	fmt.Printf("当前生成的token%v", token)
-	return string(rune(token)), err
+	Page     int `json:"page"`
+	PageSize int `json:"pageSize"`
+	Total    int `json:"total"`
 }
 
 /**
@@ -48,17 +31,17 @@ func NewResponse(ctx *gin.Context) *Response {
 /**
  * @brief 回复列表
  * @param list-列表
- * @param totalRows-总条数
+ * @param total-总条数
  */
-func (r *Response) ToResponseList(list interface{}, totalRows int) {
+func (r *Response) ToResponseList(list interface{}, total int) {
 	err := errcode.Success
 	r.Ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"list": list,
 			"Pager": Pager{
-				Page:      GetPage(r.Ctx),
-				PageSize:  GetPageSize(r.Ctx),
-				TotalRows: totalRows,
+				Page:     GetPage(r.Ctx),
+				PageSize: GetPageSize(r.Ctx),
+				Total:    total,
 			},
 		},
 		"code": err.Code(),

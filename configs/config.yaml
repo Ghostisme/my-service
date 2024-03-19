@@ -20,3 +20,5 @@ Server:
   HttpPort: 81
   ReadTimeOut: 60
   WriteTimeOut: 60
+JWT:
+  Expire: 7200

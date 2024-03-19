@@ -1,9 +1,10 @@
 package v1
 
 import (
-	"fmt"
+	"my-service/global"
 	"my-service/internal/service"
 	"my-service/pkg/app"
+	"my-service/pkg/cryptor"
 	"my-service/pkg/errcode"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ import (
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/login [post]
-func GetUser(c *gin.Context) {
+func Login(c *gin.Context) {
 	param := service.LoginRequest{}
 	response := app.NewResponse(c)
 
@@ -28,44 +29,44 @@ func GetUser(c *gin.Context) {
 	}
 
 	svc := service.New(c.Request.Context())
-	_, err := svc.GetUserByName(param.UserName)
-	if err != nil {
-		response.ToErrorResponse(errcode.ErrorUserNotExist)
-		return
-	}
+	// _, err := svc.GetUserByName(param.UserName)
+	// if err != nil {
+	// 	response.ToErrorResponse(errcode.ErrorUserNotExist)
+	// 	return
+	// }
 
-	id, err := svc.GetUser(param.UserName, param.Password)
-	fmt.Printf("id:%d", id)
+	var webSecretKey = "qgajvd17wljhaicq"
+	// 根据前端秘钥进行解密
+	decrypted := cryptor.AesSimpleDecrypt("2jLdyu6zzDZKHJgREyYsEw==", webSecretKey)
+	// 将解密秘钥结合后端key加密
+	var serviceSecretKey = "mxalxjzj9oeffag9"
+	password := cryptor.AesSimpleEncrypt(decrypted, serviceSecretKey)
+	// fmt.Println("数据库结果", password)
+	user, err := svc.Login(param.UserName, password)
 	if err != nil {
 		response.ToErrorResponse(errcode.ErrorUserPasswordError)
 		return
 	}
-	token := "asdasddsaadssadsda"
-	// token, err := app.GenerateToken()
-	// fmt.Printf("当前token%v", token)
-	// if err != nil {
-	// 	global.Logger.Errorf("app.GenerateToken err: %v", err)
-	// 	response.ToErrorResponse(errcode.UnauthorizedTokenGenerate)
-	// 	return
-	// }
-	// 将生成的token插入会当前用户表
-	// _, err1 := svc.SetToken(id, token)
-	// if err1 != nil {
-	// 	global.Logger.Errorf("app.GenerateToken err: %v", err1)
-	// 	response.ToErrorResponse(errcode.UnauthorizedTokenGenerate)
-	// 	return
-	// }
+	token, err := app.GenerateToken(user.ID)
+	if err != nil {
+		global.Logger.Errorf("app.GenerateToken err: %v", err)
+		response.ToErrorResponse(errcode.UnauthorizedTokenGenerate)
+		return
+	}
+
 	response.ToResponse(gin.H{
 		"token": token,
+		"user":  user,
 	})
 }
+
 // @Summer 登出
 // @Produce json
 // @Param token header string true "token"
 // @Success 200 {object} model.SwaggerSuccess "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/logout [post]
+// @Router /api/v1/logout [get]
 func Logout(c *gin.Context) {
 	response := app.NewResponse(c)
 	response.ToResponseSuccess()

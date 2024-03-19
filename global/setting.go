@@ -8,7 +8,7 @@ var (
 	DBSettings     *setting.DatabaseSettings
 	AppSettings    *setting.AppSettings
 	ServerSettings *setting.ServerSettings
-	// JWTSettings    *setting.JWTSettings
+	JWTSettings    *setting.JWTSettings
 	// ZMQSettings    *setting.ZMQSettings
 	// MosqtSettings  *setting.MosqtSettings
 )

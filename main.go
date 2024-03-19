@@ -34,8 +34,14 @@ func setupSetting() error {
 		global.ServerSettings.ReadTimeout *= time.Second
 		global.ServerSettings.WriteTimeout *= time.Second
 	}
-	
-
+	err = setting.ReadSection("JWT", &global.JWTSettings)
+	if err != nil {
+		return err
+	} else {
+		global.JWTSettings.Expire *= time.Second
+		global.JWTSettings.Issuer = "myspace"
+		global.JWTSettings.AppSecret = "myspace-us"
+	}
 	return nil
 }
 
@@ -64,10 +70,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupSettings err: %v", err)
 	}
-	// err = setupDBEngine()
-	// if err != nil {
-	// 	log.Fatalf("init.setupDBEngine err: %v", err)
-	// }
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
+	}
 	err = setupLogger()
 	if err != nil {
 		log.Fatalf("init.setupLogger err: %v", err)
@@ -88,10 +94,9 @@ func main() {
 	}
 
 	global.Logger.Infof("Listening: %v", global.ServerSettings.HttpPort)
-
 	// go func() {
-		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			global.Logger.Fatalf("s.ListenAndServe err: %v", err)
-		}
+	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		global.Logger.Fatalf("s.ListenAndServe err: %v", err)
+	}
 	// }()
 }
