@@ -2,7 +2,7 @@ DataBase:
   DBType: mysql
   UserName: root
   Password: Woquz159357!
-  Host: localhost:3306
+  Host: 42.192.234.152:3306
   DBName: myservice
   Charset: utf8
   ParseTime: True

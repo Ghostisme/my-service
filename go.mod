@@ -2,7 +2,7 @@ module my-service
 
 go 1.21
 
-toolchain go1.22.0
+// toolchain go1.22.0
 
 require (
 	github.com/gin-gonic/gin v1.9.1
