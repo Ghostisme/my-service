@@ -41,14 +41,14 @@ func (u User) List(c *gin.Context) {
 		Page:     app.GetPage(c),
 		PageSize: app.GetPageSize(c),
 	}
-	total, err := svc.ListCount(&param)
+	total, err := svc.UserListCount(&param)
 	if err != nil {
-		response.ToErrorResponse(errcode.ErrorGetUserCountFail)
+		response.ToErrorResponse(errcode.ErrorUserCountFail)
 		return
 	}
-	userList, err := svc.List(&param, &pager)
+	userList, err := svc.UserList(&param, &pager)
 	if err != nil {
-		response.ToErrorResponse(errcode.ErrorGetUserListFail)
+		response.ToErrorResponse(errcode.ErrorUserListFail)
 		return
 	}
 	response.ToResponseList(userList, total)

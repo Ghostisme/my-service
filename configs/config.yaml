@@ -23,6 +23,6 @@ Server:
 JWT:
   Expire: 7200
 Redis:
-  RedisAddr: localhost:82
+  RedisAddr: 127.0.0.1:6379
   RedisPassword: Woquz1593571!a
   RedisDB: 0

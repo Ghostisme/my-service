@@ -26,14 +26,17 @@ func NewRouter() *gin.Engine {
 	// global.Logger.Infof("查看login接口数据: %v", v1.GetUser)
 	apiV1 := r.Group("api/v1")
 	user := v1.NewUser()
+	role := v1.NewRole()
 	apiV1.Use(middleware.JWT()) // 增加token有效性验证
 	{
 		// 登出
 		apiV1.GET("/logout", v1.Logout)
 		// 注册
-		apiV1.POST("/register", )
+		// apiV1.POST("/register", )
 		// 获取用户列表
-		apiV1.GET("/user", user.List)
+		apiV1.POST("/user", user.List)
+		// 获取角色列表
+		apiV1.POST("/role", role.List)
 	}
 
 	return r

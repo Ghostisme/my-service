@@ -7,18 +7,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Role struct {
-	*Model
-	RoleCode   string `json:"role" gorm:"Column:role_code"`
-	RoleName   string `json:"role_name" gorm:"Column:role_name"`
-	CreateTime string `json:"create_time" gorm:"Column:create_time"`
-	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
-	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
-	Operator   string `json:"operator" gorm:"Column:operator"`
-	OperatorId int    `json:"operator_id" gorm:"Column:operator_id"`
-	Status     int    `json:"status" gorm:"Column:status"`
-}
-
 type tokenInfo struct {
 	Token string `json:"token"`
 	User  User   `json:"user"`

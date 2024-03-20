@@ -90,10 +90,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupSettings err: %v", err)
 	}
-	err = setupRedisEngine()
-	if err != nil {
-		log.Fatalf("init.setupRedisEngine err: %v", err)
-	}
+	// err = setupRedisEngine()
+	// if err != nil {
+	// 	log.Fatalf("init.setupRedisEngine err: %v", err)
+	// }
 	err = setupDBEngine()
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)

@@ -12,10 +12,12 @@ type UserListRequest struct {
 	KeyWord   string `form: "keyWord"`
 }
 
-func (svc *Service) List(param *UserListRequest, pager *app.Pager) ([]*model.UserList, error) {
-	return svc.dao.List(*param.Status, param.BeginTime, param.EndTime, param.KeyWord, pager.Page, pager.PageSize)
+// 获取用户列表
+func (svc *Service) UserList(param *UserListRequest, pager *app.Pager) ([]*model.UserList, error) {
+	return svc.dao.UserList(*param.Status, param.BeginTime, param.EndTime, param.KeyWord, pager.Page, pager.PageSize)
 }
 
-func (svc *Service) ListCount(param *UserListRequest) (int, error) {
-	return svc.dao.ListCount(*param.Status, param.BeginTime, param.EndTime, param.KeyWord)
+// 获取用户列表总条数
+func (svc *Service) UserListCount(param *UserListRequest) (int, error) {
+	return svc.dao.UserListCount(*param.Status, param.BeginTime, param.EndTime, param.KeyWord)
 }
