@@ -38,7 +38,7 @@ func (r *Response) ToResponseList(list interface{}, total int) {
 	r.Ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"list": list,
-			"Pager": Pager{
+			"page": Pager{
 				Page:     GetPage(r.Ctx),
 				PageSize: GetPageSize(r.Ctx),
 				Total:    total,

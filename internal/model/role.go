@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"my-service/pkg/app"
 
 	"github.com/jinzhu/gorm"
@@ -15,7 +16,7 @@ type Role struct {
 	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
 	ActionTime string `json:"action_time" gorm:"Column:action_time"`
 	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
-	Status     int    `json:"status" gorm:"Column:status"`
+	Status     *int   `json:"status" gorm:"Column:status"`
 }
 
 type roleList struct {
@@ -32,14 +33,18 @@ type RoleInfo struct {
 func (t Role) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSize int) ([]*Role, error) {
 	var role []*Role
 	if beginTime != "" && endTime != "" {
-		db = db.Where("create_time >= ? AND end_time <= ?", beginTime, endTime)
+		db = db.Where("create_time >= ? AND create_time <= ?", beginTime, endTime)
 	}
 	if keyWord != "" {
-		db = db.Where("")
+
+		db = db.Where("role_name LIKE ?", fmt.Sprintf(`%%%s%%`, keyWord))
+		fmt.Println("keyWord", db)
 	}
-	db = db.Where("")
-	if pageSize > 0 {
-		db = db.Limit(pageSize)
+	if t.Status != nil {
+		db = db.Where("status = ?", t.Status)
+	}
+	if page >= 0 && pageSize > 0 {
+		db = db.Offset(page).Limit(pageSize)
 	}
 	err := db.Find(&role).Error
 	if err != nil {
@@ -52,8 +57,16 @@ func (t Role) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSi
 func (t Role) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, error) {
 	var role Role
 	var count int
-
-	// db = db.Select("Count(role.id)").Where("")
+	if beginTime != "" && endTime != "" {
+		db = db.Where("create_time >= ? AND create_time <= ?", beginTime, endTime)
+	}
+	if keyWord != "" {
+		db = db.Where("role_name LIKE ?", fmt.Sprintf(`%%%s%%`, keyWord))
+	}
+	if t.Status != nil {
+		db = db.Where("status = ?", t.Status)
+	}
+	db = db.Select("Count(role.id)")
 	err := db.Find(&role).Count(&count).Error
 	if err != nil {
 		return 0, err

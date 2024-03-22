@@ -52,13 +52,13 @@ func Register(db *gorm.DB, userName, passWord string) (int, error) {
 	db = db.Where("role.code = 'user'")
 	err := db.First(&role).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return -1, err
+		return 0, err
 	}
 	fmt.Println("当前role", role)
 	user := UserList{UserName: userName, Password: passWord, Status: 1, CreateTime: utils.NowTimeString(), UpdateTime: utils.NowTimeString(), RoleId: 1}
 	res := db.Omit("DeleteTime", "ID").Create(&user)
 	if res.Error != nil {
-		return -1, res.Error
+		return 0, res.Error
 	}
 	return 0, nil
 }
