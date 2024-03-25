@@ -37,6 +37,8 @@ func NewRouter() *gin.Engine {
 		apiV1.POST("/user", user.List)
 		// 获取角色列表
 		apiV1.POST("/role", role.List)
+		// 编辑角色
+		apiV1.PUT("/role/update", role.Update)
 	}
 
 	return r

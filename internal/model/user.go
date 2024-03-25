@@ -122,3 +122,14 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 	// }
 	return count, nil
 }
+
+// // 创建新用户
+// func (t User) Create(db *gorm.DB, ) (int, error) {
+// 	var id int
+
+// }
+
+// // 编辑用户
+// func (t User) Update(db *gorm.DB, id int) (int, error) {
+
+// }

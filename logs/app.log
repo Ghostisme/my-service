@@ -30,3 +30,5 @@
 2024/03/21 17:21:02 {"callers":["D:/go/src/my-service/main.go: 101 main.init.0"],"level":"info","message":"Listening: 81","time":1711012862756245800}
 2024/03/21 17:22:34 {"callers":["D:/go/src/my-service/main.go: 101 main.init.0"],"level":"info","message":"Listening: 81","time":1711012954043436600}
 2024/03/22 14:26:21 {"callers":["D:/go/src/my-service/main.go: 101 main.init.0"],"level":"info","message":"Listening: 81","time":1711088781475072700}
+2024/03/22 17:24:07 {"callers":["D:/go/src/my-service/main.go: 101 main.init.0"],"level":"info","message":"Listening: 81","time":1711099447898848400}
+2024/03/25 09:51:59 {"callers":["D:/go/src/my-service/main.go: 101 main.init.0"],"level":"info","message":"Listening: 81","time":1711331519318300500}

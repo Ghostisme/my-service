@@ -17,3 +17,9 @@ func (d *Dao) RoleListCount(beginTime, endTime, keyWord string, status *int) (in
 	role := model.Role{Status: status}
 	return role.ListCount(d.engine, beginTime, endTime, keyWord)
 }
+
+// 编辑角色信息
+func (d *Dao) UpdateRole(userId uint32, id int, name string) (int, error) {
+	role := model.Role{}
+	return role.Update(d.engine, userId, id, name)
+}
