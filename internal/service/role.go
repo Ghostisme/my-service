@@ -14,8 +14,9 @@ type RoleListRequest struct {
 }
 
 type RoleUpdateRequest struct {
-	Id   *int   `json:"id" binding:"required" form:"id"`
-	Name string `json:"name" form:"name"`
+	Id     *int   `json:"id" binding:"required" form:"id"`
+	Name   string `json:"name" form:"name"`
+	Status int    `json:"status" form:"status"`
 	// UserId int    `form:"-"`
 }
 
@@ -31,5 +32,5 @@ func (svc *Service) RoleListCount(param *RoleListRequest) (int, error) {
 
 // 编辑角色状态
 func (svc *Service) UpdateRole(UserId uint32, param *RoleUpdateRequest) (int, error) {
-	return svc.dao.UpdateRole(UserId, *param.Id, param.Name)
+	return svc.dao.UpdateRole(UserId, *param.Id, param.Status, param.Name)
 }

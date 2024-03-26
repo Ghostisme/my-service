@@ -20,6 +20,12 @@ type Role struct {
 	Status     *int   `json:"status" gorm:"Column:status"`
 }
 
+type UpdateRole struct {
+	*Model
+	RoleName string `json:"role_name" gorm:"Column:role_name"`
+	Status   int    `json:"status" gorm:"Column:status"`
+}
+
 type roleList struct {
 	List  []*Role
 	Pager *app.Pager `json:"pager"`
@@ -82,10 +88,22 @@ func (t Role) Create(db *gorm.DB) (int, error) {
 }
 
 // 编辑角色
-func (t Role) Update(db *gorm.DB, userId uint32, id int, name string) (int, error) {
-	fmt.Println("传递的userid，%d", userId)
-	db = db.Update()
+func (t Role) Update(db *gorm.DB, userId uint32, id, status int, name string) (int, error) {
+	role := UpdateRole{
+		&Model{ID: uint32(id)},
+		name,
+		status,
+	}
+	if name != "" {
+		db = db.Table("role").Updates(&role)
+	}
+	res := db.RowsAffected
+	err := db.Error
+	if err != nil {
+		return -1, err
+	}
 	return 0, nil
+	// return int(res), nil
 }
 
 // 删除角色

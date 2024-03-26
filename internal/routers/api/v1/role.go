@@ -63,7 +63,7 @@ func (r Role) List(c *gin.Context) {
 // @Success 200 {object} model.SwaggerSuccess "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/role/update [put]
+// @Router /api/v1/role [put]
 func (r Role) Update(c *gin.Context) {
 	// var (
 	// 	token   string
