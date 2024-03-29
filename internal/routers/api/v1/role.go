@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"my-service/internal/service"
 	"my-service/pkg/app"
 	"my-service/pkg/errcode"
@@ -60,16 +59,12 @@ func (r Role) List(c *gin.Context) {
 // @Param token header string true "token"
 // @Param id query int true "角色主键id"
 // @Param name query string false "角色姓名"
+// @Param status query string false "角色状态"
 // @Success 200 {object} model.SwaggerSuccess "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/role [put]
 func (r Role) Update(c *gin.Context) {
-	// var (
-	// 	token   string
-	// 	errCode = errcode.Success
-	// )
-	// var token string
 	param := service.RoleUpdateRequest{}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
@@ -81,12 +76,34 @@ func (r Role) Update(c *gin.Context) {
 	// 通过jwt的token获取userId
 	token := c.GetHeader("token")
 	claims, _ := app.ParseToken(token)
-	// res, err := svc. claims.UserId
-	res, err := svc.UpdateRole(claims.UserId, &param)
+	// if &param.Name == nil {
+	// 	response.ToErrorResponse(errcode.ErrorRoleNameValidFail)
+	// 	return
+	// }
+	_, err := svc.UpdateRole(claims.UserId, &param)
 	if err != nil {
 		response.ToErrorResponse(errcode.ErrorRoleUpdateFail)
 		return
 	}
-	fmt.Println("编辑角色%v", res)
 	response.ToResponseSuccess()
+}
+
+// @Summer 删除角色信息
+// @Produce json
+// @Param token header string true "token"
+// @Param id query int true "角色主键id"
+// @Success 200 {object} model.SwaggerSuccess "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/role [delete]
+func (r Role) Del(c *gin.Context) {
+	param := service.RoleDelRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	// svc := service.New(c.Request.Context())
+
 }

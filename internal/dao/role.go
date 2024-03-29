@@ -20,6 +20,12 @@ func (d *Dao) RoleListCount(beginTime, endTime, keyWord string, status *int) (in
 
 // 编辑角色信息
 func (d *Dao) UpdateRole(userId uint32, id, status int, name string) (int, error) {
+	role := model.Role{Status: &status}
+	return role.Update(d.engine, userId, id, name)
+}
+
+// 删除角色信息
+func (d *Dao) DelRole(userId uint32, id int) (int, error) {
 	role := model.Role{}
-	return role.Update(d.engine, userId, id, status, name)
+	return role.Delete(d.engine, userId, id)
 }

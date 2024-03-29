@@ -15,7 +15,9 @@ import (
 	"github.com/go-redis/redis/v8"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
+
 var ctx = context.Background()
+
 func setupSetting() error {
 	setting, err := setting.NewSetting()
 	if err != nil {
@@ -54,9 +56,9 @@ func setupSetting() error {
 func setupRedisEngine() error {
 	var err error
 	global.RedisClient = redis.NewClient(&redis.Options{
-		Addr: global.RedisSettings.RedisAddr,
+		Addr:     global.RedisSettings.RedisAddr,
 		Password: global.RedisSettings.RedisPassword,
-		DB: global.RedisSettings.RedisDB,
+		DB:       global.RedisSettings.RedisDB,
 	})
 	_, err = global.RedisClient.Ping(ctx).Result()
 	if err != nil {
@@ -81,7 +83,30 @@ func setupLogger() error {
 		MaxAge:    30,
 		LocalTime: true,
 	}, "", log.LstdFlags).WithCaller(2)
-
+	global.DaoLogger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  global.AppSettings.LogSavePath + "/" + "dao" + global.AppSettings.LogFileExt,
+		MaxSize:   60,
+		MaxAge:    30,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+	global.ServiceLogger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  global.AppSettings.LogSavePath + "/" + "service" + global.AppSettings.LogFileExt,
+		MaxSize:   60,
+		MaxAge:    30,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+	global.ModelLogger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  global.AppSettings.LogSavePath + "/" + "model" + global.AppSettings.LogFileExt,
+		MaxSize:   60,
+		MaxAge:    30,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+	global.ApiLogger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  global.AppSettings.LogSavePath + "/" + "api" + global.AppSettings.LogFileExt,
+		MaxSize:   60,
+		MaxAge:    30,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
 	return nil
 }
 
@@ -123,4 +148,3 @@ func main() {
 	}
 	// }()
 }
-

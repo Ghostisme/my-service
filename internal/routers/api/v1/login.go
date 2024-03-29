@@ -45,7 +45,7 @@ func Login(c *gin.Context) {
 	}
 	token, err := app.GenerateToken(user.ID)
 	if err != nil {
-		global.Logger.Errorf("app.GenerateToken err: %v", err)
+		global.ApiLogger.Errorf("app.GenerateToken err: %v", err)
 		response.ToErrorResponse(errcode.UnauthorizedTokenGenerate)
 		return
 	}
@@ -74,7 +74,7 @@ func Logout(c *gin.Context) {
 // @Param username query string true "用户名" maxlength(100)
 // @Param password query string true "密码" maxlength(100)
 // @Param code query string true "验证码" maxlength(6)
-func Register(c *gin.Context)  {
+func Register(c *gin.Context) {
 	// response := app.NewResponse(c)
 
 	// valid, errs := app.BindAndValid(c, &param)

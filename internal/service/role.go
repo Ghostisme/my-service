@@ -1,6 +1,7 @@
 package service
 
 import (
+	"my-service/global"
 	"my-service/internal/model"
 	"my-service/pkg/app"
 )
@@ -20,6 +21,10 @@ type RoleUpdateRequest struct {
 	// UserId int    `form:"-"`
 }
 
+type RoleDelRequest struct {
+	Id *int `json:"id" binding:"required" form:"id"`
+}
+
 // 获取角色列表
 func (svc *Service) RoleList(param *RoleListRequest, pager *app.Pager) ([]*model.Role, error) {
 	return svc.dao.RoleList(param.BeginTime, param.EndTime, param.KeyWord, param.Status, pager.Page, pager.PageSize)
@@ -32,5 +37,11 @@ func (svc *Service) RoleListCount(param *RoleListRequest) (int, error) {
 
 // 编辑角色状态
 func (svc *Service) UpdateRole(UserId uint32, param *RoleUpdateRequest) (int, error) {
+	global.ServiceLogger.Info("status", param.Status)
 	return svc.dao.UpdateRole(UserId, *param.Id, param.Status, param.Name)
+}
+
+// 删除角色
+func (svc *Service) DelRole(UserId uint32, param *RoleDelRequest) (int, error) {
+	return svc.dao.DelRole(UserId, *param.Id)
 }

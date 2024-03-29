@@ -9,6 +9,7 @@ import (
 
 type Role struct {
 	*Model
+	// gorm.Model
 	RoleCode   string `json:"role" gorm:"Column:role_code"`
 	RoleName   string `json:"role_name" gorm:"Column:role_name"`
 	CreateTime string `json:"create_time" gorm:"Column:create_time"`
@@ -22,10 +23,21 @@ type Role struct {
 
 type UpdateRole struct {
 	*Model
-	RoleName string `json:"role_name" gorm:"Column:role_name"`
-	Status   int    `json:"status" gorm:"Column:status"`
+	RoleName   string `json:"role_name" gorm:"Column:role_name"`
+	Status     int    `json:"status" gorm:"Column:status"`
+	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
+	ActionTime string `json:"action_time" gorm:"Column:action_time"`
+	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
 }
 
+type DelRole struct {
+	*Model
+	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
+	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
+	ActionTime string `json:"action_time" gorm:"Column:action_time"`
+	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
+	IsDelete   int    `json:"is_delete" gorm:"Column:is_delete"`
+}
 type roleList struct {
 	List  []*Role
 	Pager *app.Pager `json:"pager"`
@@ -88,25 +100,48 @@ func (t Role) Create(db *gorm.DB) (int, error) {
 }
 
 // 编辑角色
-func (t Role) Update(db *gorm.DB, userId uint32, id, status int, name string) (int, error) {
-	role := UpdateRole{
-		&Model{ID: uint32(id)},
-		name,
-		status,
-	}
-	if name != "" {
-		db = db.Table("role").Updates(&role)
-	}
-	res := db.RowsAffected
+func (t Role) Update(db *gorm.DB, userId uint32, id int, name string) (int, error) {
+	// role := Role{}
+	// db = db.Model(&role).Select("role_name", "status").Where("id = ?", id).Updates(Role{
+	// 	Model:    &Model{ID: uint32(id)},
+	// 	RoleName: "123",
+	// 	Status:   t.Status,
+	// })
+	var role Role
+	db = db.Find(&role, id)
+	// if name != "" {
+	// 	return t.UpdateName(db, userId, id, name)
+	// } else {
+	// 	return t.UpdateStatus(db, userId, id)
+	// }
+	// db = db.Update("status", t.Status)
+	db = db.Updates(map[string]interface{}{"role_name": name, "status": t.Status})
 	err := db.Error
 	if err != nil {
 		return -1, err
 	}
 	return 0, nil
-	// return int(res), nil
+}
+func (t Role) UpdateName(db *gorm.DB, userId uint32, id int, name string) (int, error) {
+	err := db.Error
+	if err != nil {
+		return -1, err
+	}
+	return 0, nil
+}
+func (t Role) UpdateStatus(db *gorm.DB, userId uint32, id int) (int, error) {
+	err := db.Error
+	if err != nil {
+		return -1, err
+	}
+	return 0, nil
 }
 
 // 删除角色
-func (t Role) Del(db *gorm.DB, id int) (int, error) {
+func (t Role) Delete(db *gorm.DB, userId uint32, id int) (int, error) {
+	// role := DelRole{
+	// 	&Model{ID: uint32(id)},
+	// }
+
 	return 0, nil
 }

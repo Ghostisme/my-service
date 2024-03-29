@@ -1,0 +1,21 @@
+2024/03/29 14:46:50 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711694810186298700}
+2024/03/29 14:48:49 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status0","time":1711694929590142900}
+2024/03/29 14:48:49 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711694929590750000}
+2024/03/29 15:06:13 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc0000d0390 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x12072e0}","time":1711695973488995800}
+2024/03/29 15:06:13 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711695973489564600}
+2024/03/29 15:17:35 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc0006ec000 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0xdd72e0}","time":1711696655576762800}
+2024/03/29 15:17:35 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711696655577334500}
+2024/03/29 15:19:31 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc000008210 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711696771056701000}
+2024/03/29 15:19:31 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711696771057206700}
+2024/03/29 15:21:03 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063e168 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711696863946055100}
+2024/03/29 15:21:03 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status0","time":1711696863946055100}
+2024/03/29 15:21:08 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063eba0 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711696868731854900}
+2024/03/29 15:21:08 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711696868731854900}
+2024/03/29 16:14:09 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063ea80 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711700049842762600}
+2024/03/29 16:14:09 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700049843267900}
+2024/03/29 16:15:43 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc0000085d0 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711700143431478300}
+2024/03/29 16:15:43 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700143432085900}
+2024/03/29 16:16:58 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063eff0 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711700218678182700}
+2024/03/29 16:16:58 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700218678692800}
+2024/03/29 16:17:27 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063e000 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711700247094027800}
+2024/03/29 16:17:27 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700247094534500}

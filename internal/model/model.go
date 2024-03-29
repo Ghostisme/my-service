@@ -29,13 +29,26 @@ var (
 )
 
 func NewDBEngine(dbSettings *setting.DatabaseSettings) (*gorm.DB, error) {
+	// dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local",
+	// 	dbSettings.UserName,
+	// 	dbSettings.Password,
+	// 	dbSettings.Host,
+	// 	dbSettings.DBName,
+	// 	dbSettings.Charset,
+	// 	dbSettings.ParseTime,
+	// )
+	// fmt.Println("dsn", dsn)
+	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+	// 	Logger: logger.Default.LogMode(logger.Info),
+	// })
 	db, err := gorm.Open(dbSettings.DBType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local",
 		dbSettings.UserName,
 		dbSettings.Password,
 		dbSettings.Host,
 		dbSettings.DBName,
 		dbSettings.Charset,
-		dbSettings.ParseTime))
+		dbSettings.ParseTime,
+	))
 	if err != nil {
 		return nil, err
 	}
