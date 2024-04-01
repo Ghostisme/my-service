@@ -1,0 +1,4 @@
+2024/04/01 17:34:00 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"判断值0","time":1711964040165044600}
+2024/04/01 17:34:00 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"判断true","time":1711964040165550500}
+2024/04/01 17:35:36 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"判断值1","time":1711964136645293000}
+2024/04/01 17:35:36 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"判断false","time":1711964136645293000}

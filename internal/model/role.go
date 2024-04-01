@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"my-service/pkg/app"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -19,24 +20,6 @@ type Role struct {
 	ActionTime string `json:"action_time" gorm:"Column:action_time"`
 	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
 	Status     *int   `json:"status" gorm:"Column:status"`
-}
-
-type UpdateRole struct {
-	*Model
-	RoleName   string `json:"role_name" gorm:"Column:role_name"`
-	Status     int    `json:"status" gorm:"Column:status"`
-	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
-	ActionTime string `json:"action_time" gorm:"Column:action_time"`
-	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
-}
-
-type DelRole struct {
-	*Model
-	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
-	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
-	ActionTime string `json:"action_time" gorm:"Column:action_time"`
-	ActionId   int    `json:"action_id" gorm:"Column:action_id"`
-	IsDelete   int    `json:"is_delete" gorm:"Column:is_delete"`
 }
 type roleList struct {
 	List  []*Role
@@ -65,6 +48,7 @@ func (t Role) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSi
 	if page >= 0 && pageSize > 0 {
 		db = db.Offset(page).Limit(pageSize)
 	}
+	db = db.Where("is_delete = 0")
 	err := db.Find(&role).Error
 	if err != nil {
 		return nil, err
@@ -94,9 +78,29 @@ func (t Role) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 }
 
 // 创建新角色
-func (t Role) Create(db *gorm.DB) (int, error) {
-	// var id int
-	return 0, nil
+func (t Role) Create(db *gorm.DB, userId uint32, isAdmin, status int, name string) (int, error) {
+	var roleCode string
+	if isAdmin == 0 {
+		roleCode = "admin"
+	} else {
+		roleCode = "user"
+	}
+	role := Role{
+		RoleName:   name,
+		Status:     &status,
+		RoleCode:   roleCode,
+		ActionId:   int(userId),
+		ActionTime: time.Now().Format("2006-01-02 15:04:05"),
+		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+		// DeleteTime: sql.NullString{Valid: false},
+	}
+	db = db.Omit("ID", "DeleteTime").Create(&role)
+	err := db.Error
+	if err != nil {
+		return -1, err
+	}
+	return int(role.ID), nil
 }
 
 // 编辑角色
@@ -115,7 +119,12 @@ func (t Role) Update(db *gorm.DB, userId uint32, id int, name string) (int, erro
 	// 	return t.UpdateStatus(db, userId, id)
 	// }
 	// db = db.Update("status", t.Status)
-	db = db.Updates(map[string]interface{}{"role_name": name, "status": t.Status})
+	db = db.Updates(map[string]interface{}{
+		"role_name":   name,
+		"status":      t.Status,
+		"action_id":   userId,
+		"action_time": time.Now().Format("2006-01-02 15:04:05"),
+	})
 	err := db.Error
 	if err != nil {
 		return -1, err
@@ -142,6 +151,17 @@ func (t Role) Delete(db *gorm.DB, userId uint32, id int) (int, error) {
 	// role := DelRole{
 	// 	&Model{ID: uint32(id)},
 	// }
-
+	var role Role
+	db = db.Find(&role, id)
+	db = db.Updates(map[string]interface{}{
+		"is_delete":   1,
+		"delete_time": time.Now().Format("2006-01-02 15:04:05"),
+		"action_id":   userId,
+		"action_time": time.Now().Format("2006-01-02 15:04:05"),
+	})
+	err := db.Error
+	if err != nil {
+		return -1, err
+	}
 	return 0, nil
 }

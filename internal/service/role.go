@@ -1,7 +1,6 @@
 package service
 
 import (
-	"my-service/global"
 	"my-service/internal/model"
 	"my-service/pkg/app"
 )
@@ -12,6 +11,12 @@ type RoleListRequest struct {
 	EndTime   string `json:"endTime" form:"endTime"`
 	KeyWord   string `json:"keyWord" form:"keyWord"`
 	// Status    *int   `form: "status" binding:"required,gte=0"`
+}
+
+type RoleCreateRequest struct {
+	Name    string `json:"name" form:"name"`
+	IsAdmin int    `json:"is_admin" form:"is_admin"`
+	Status  int    `json:"status" form:"status"`
 }
 
 type RoleUpdateRequest struct {
@@ -35,9 +40,13 @@ func (svc *Service) RoleListCount(param *RoleListRequest) (int, error) {
 	return svc.dao.RoleListCount(param.BeginTime, param.EndTime, param.KeyWord, param.Status)
 }
 
-// 编辑角色状态
+// 新建角色
+func (svc *Service) CreateRole(UserId uint32, param *RoleCreateRequest) (int, error) {
+	return svc.dao.CreateRole(UserId, param.IsAdmin, param.Status, param.Name)
+}
+
+// 编辑角色
 func (svc *Service) UpdateRole(UserId uint32, param *RoleUpdateRequest) (int, error) {
-	global.ServiceLogger.Info("status", param.Status)
 	return svc.dao.UpdateRole(UserId, *param.Id, param.Status, param.Name)
 }
 

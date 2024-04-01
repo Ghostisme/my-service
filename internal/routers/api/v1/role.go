@@ -54,6 +54,36 @@ func (r Role) List(c *gin.Context) {
 	response.ToResponseList(roleList, total)
 }
 
+// @Summer 新建角色信息
+// @Produce json
+// @Param token header string true "token"
+// @Param id query int true "角色主键id"
+// @Param name query string false "角色姓名"
+// @Param status query string false "角色状态"
+// @Success 200 {object} model.SwaggerSuccess "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/role [post]
+func (r Role) Create(c *gin.Context) {
+	param := service.RoleCreateRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	// 通过jwt的token获取userId
+	token := c.GetHeader("token")
+	claims, _ := app.ParseToken(token)
+	_, err := svc.CreateRole(claims.UserId, &param)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorRoleCreateFail)
+		return
+	}
+	response.ToResponseSuccess()
+}
+
 // @Summer 编辑角色信息
 // @Produce json
 // @Param token header string true "token"
@@ -104,6 +134,14 @@ func (r Role) Del(c *gin.Context) {
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
-	// svc := service.New(c.Request.Context())
-
+	svc := service.New(c.Request.Context())
+	// 通过jwt的token获取userId
+	token := c.GetHeader("token")
+	claims, _ := app.ParseToken(token)
+	_, err := svc.DelRole(claims.UserId, &param)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorRoleDelFail)
+		return
+	}
+	response.ToResponseSuccess()
 }

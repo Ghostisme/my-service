@@ -37,10 +37,12 @@ func NewRouter() *gin.Engine {
 		apiV1.POST("/user", user.List)
 		// 获取角色列表
 		apiV1.POST("/role", role.List)
+		// 创建角色
+		apiV1.POST("/role/save", role.Create)
 		// 编辑角色
 		apiV1.PUT("/role", role.Update)
 		// 删除角色
-		// apiV1.DELETE("/role", role)
+		apiV1.DELETE("/role", role.Del)
 	}
 
 	return r
