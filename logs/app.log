@@ -170,3 +170,15 @@
 2024/04/01 17:29:03 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1711963743972981100}
 2024/04/01 17:33:57 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1711964037209068500}
 2024/04/01 17:35:19 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1711964119242281100}
+2024/04/01 17:56:33 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1711965393537907800}
+2024/04/02 09:33:25 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712021605636640800}
+2024/04/02 13:37:13 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712036233331118000}
+2024/04/02 13:38:20 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712036300667422100}
+2024/04/02 13:39:00 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712036340860434300}
+2024/04/02 13:40:49 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712036449123551200}
+2024/04/02 13:41:37 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712036497399377800}
+2024/04/02 14:37:16 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712039836186885000}
+2024/04/02 14:46:40 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712040400717854900}
+2024/04/02 14:48:02 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712040482589977300}
+2024/04/02 14:49:13 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712040553666883900}
+2024/04/02 14:51:13 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"Listening: 81","time":1712040673510507300}

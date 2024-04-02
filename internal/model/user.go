@@ -2,7 +2,9 @@ package model
 
 import (
 	"fmt"
+	"my-service/global"
 	"my-service/pkg/app"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -15,6 +17,9 @@ type User struct {
 	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
 	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
 	Status     *int   `json:"status" gorm:"Column:status"`
+	Mobile     string `json:"mobile" gorm:"Column:mobile"`
+	Addr       string `json:"addr" gorm:"Column:addr"`
+	Email      string `json:"email" gorm:"Column:email"`
 	RoleId     int    `json:"-" gorm:"Column:role_id"`
 	Role       Role   `json:"role" gorm:"foreignKey:RoleId;references:ID;"`
 }
@@ -27,6 +32,10 @@ type UserList struct {
 	UpdateTime string `json:"update_time" gorm:"Column:update_time"`
 	DeleteTime string `json:"delete_time" gorm:"Column:delete_time"`
 	Status     int    `json:"status" gorm:"Column:status"`
+	Mobile     string `json:"mobile" gorm:"Column:mobile"`
+	Addr       string `json:"addr" gorm:"Column:addr"`
+	Email      string `json:"email" gorm:"Column:email"`
+	IsDelete   int    `json:"is_delete" gorm:"Column:is_delete"`
 	RoleId     int    `json:"-" gorm:"Column:role_id"`
 }
 
@@ -56,7 +65,8 @@ func (t User) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSi
 	if page >= 0 && pageSize > 0 {
 		db = db.Offset(page).Limit(pageSize)
 	}
-	err := db.Table("user").Find(&user).Error
+	db = db.Where("`user`.is_delete = 0")
+	err := db.Find(&user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +108,7 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 	if t.Status != nil {
 		db = db.Where("status = ?", t.Status)
 	}
-	db = db.Select("Count(`user`.id)")
+	db = db.Select("Count(`user`.id)").Where("is_delete = 0")
 	err := db.Find(&user).Count(&count).Error
 	if err != nil {
 		return 0, err
@@ -123,13 +133,43 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 	return count, nil
 }
 
-// // 创建新用户
-// func (t User) Create(db *gorm.DB, ) (int, error) {
-// 	var id int
+// 创建新用户
+func (t User) Create(db *gorm.DB, username, password, mobile, addr, email string, isAdmin, status int) (int, error) {
+	var roleCode string
+	if isAdmin == 0 {
+		roleCode = "admin"
+	} else {
+		roleCode = "user"
+	}
+	var role Role
+	db = db.Select("id").Where("role_code = ?", roleCode)
+	err := db.Find(&role).Error
+	if err != nil {
+		return -1, err
+	}
+	global.ModelLogger.Info("查询的role_id", role.ID)
+	user := UserList{
+		UserName:   username,
+		Password:   password,
+		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+		Mobile:     mobile,
+		Addr:       addr,
+		Email:      email,
+		IsDelete:   0,
+		Status:     status,
+		RoleId:     int(role.ID),
+	}
+	db = db.Omit("ID").Create(&user)
+	err = db.Error
+	if err != nil {
+		return -1, err
+	}
+	return 0, nil
+}
 
-// }
-
-// // 编辑用户
-// func (t User) Update(db *gorm.DB, id int) (int, error) {
-
-// }
+// 编辑用户
+func (t User) Update(db *gorm.DB, id int) (int, error) {
+	var user UserList
+	db = db.Find(&user, id)
+}
