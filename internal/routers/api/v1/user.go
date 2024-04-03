@@ -53,3 +53,17 @@ func (u User) List(c *gin.Context) {
 	}
 	response.ToResponseList(userList, total)
 }
+
+// @Summer 创建用户
+// @Produce json
+// @Param token header string true "token"
+// @Param username query string false "用户姓名"
+// @Param mobile query string false "用户联系方式"
+// @Param addr query string false "地址"
+// @Param email query string false "邮箱"
+// @Param status query int false "是否启用"
+// @Param is_admin query int false "是否是管理员"
+// @Success 200 {object} model.UserInfo "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/user/save [post]

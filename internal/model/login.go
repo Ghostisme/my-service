@@ -1,8 +1,7 @@
 package model
 
 import (
-	"fmt"
-	"my-service/pkg/utils"
+	"my-service/global"
 
 	"github.com/jinzhu/gorm"
 )
@@ -47,18 +46,13 @@ func Login(db *gorm.DB, userName, Password string) (*User, error) {
 }
 
 // 用户注册
-func Register(db *gorm.DB, userName, passWord string) (int, error) {
-	var role Role
-	db = db.Where("role.code = 'user'")
-	err := db.First(&role).Error
+func Register(db *gorm.DB, userName, password string) (int, error) {
+	user := User{}
+	res, err := user.Create(db, NewOption(WithRegister(userName, password)))
+	global.ApiLogger.Info("当前注册调用新增", res)
+	// err = db.Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return 0, err
-	}
-	fmt.Println("当前role", role)
-	user := UserList{UserName: userName, Password: passWord, Status: 1, CreateTime: utils.NowTimeString(), UpdateTime: utils.NowTimeString(), RoleId: 1}
-	res := db.Omit("DeleteTime", "ID").Create(&user)
-	if res.Error != nil {
-		return 0, res.Error
+		return -1, err
 	}
 	return 0, nil
 }

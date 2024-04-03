@@ -39,3 +39,6 @@ func (d *Dao) Login(userName, Password string) (*model.User, error) {
  * @param password-密码
  * @return
  */
+func (d *Dao) Register(userName, Password string) (int, error) {
+	return model.Register(d.engine, userName, Password)
+}

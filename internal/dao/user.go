@@ -5,16 +5,7 @@ import (
 	"my-service/pkg/app"
 )
 
-/**
- * @brief 获取用户列表
- * @param beginTime-开始时间
- * @param endTime-结束时间
- * @param keyWord-关键词
- * @param status-是否有效
- * @param page-页码
- * @param pageSize-每页条数
- * @return 用户数组集合，错误信息
- */
+// 获取用户列表
 func (d *Dao) UserList(status *int, beginTime, endTime, keyWord string, page, pageSize int) ([]*model.UserList, error) {
 	user := model.User{Status: status}
 	pageOffset := app.GetPageOffset(page, pageSize)
@@ -25,4 +16,23 @@ func (d *Dao) UserList(status *int, beginTime, endTime, keyWord string, page, pa
 func (d *Dao) UserListCount(status *int, beginTime, endTime, keyWord string) (int, error) {
 	user := model.User{Status: status}
 	return user.ListCount(d.engine, beginTime, endTime, keyWord)
+}
+
+// 创建用户
+func (d *Dao) CreateUser(username, mobile, addr, email string, isAdmin, status int) (int, error) {
+	user := model.User{}
+	option := model.NewOption(model.WithCreate(username, mobile, addr, email, isAdmin, status))
+	return user.Create(d.engine, option)
+}
+
+// 编辑用户
+func (d *Dao) UpdateUser(id, status int, username, mobile, email, addr string) (int, error) {
+	user := model.User{}
+	return user.Update(d.engine, id, status, username, mobile, email, addr)
+}
+
+// 删除用户
+func (d *Dao) DelUser(id int) (int, error) {
+	user := model.User{}
+	return user.Del(d.engine, id)
 }

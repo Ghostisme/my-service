@@ -97,7 +97,7 @@ func (t Role) Create(db *gorm.DB, userId uint32, isAdmin, status int, name strin
 	}
 	db = db.Omit("ID", "DeleteTime").Create(&role)
 	err := db.Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return int(role.ID), nil
@@ -119,28 +119,32 @@ func (t Role) Update(db *gorm.DB, userId uint32, id int, name string) (int, erro
 	// 	return t.UpdateStatus(db, userId, id)
 	// }
 	// db = db.Update("status", t.Status)
+	err := db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
 	db = db.Updates(map[string]interface{}{
 		"role_name":   name,
 		"status":      t.Status,
 		"action_id":   userId,
 		"action_time": time.Now().Format("2006-01-02 15:04:05"),
 	})
-	err := db.Error
-	if err != nil {
+	err = db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return 0, nil
 }
 func (t Role) UpdateName(db *gorm.DB, userId uint32, id int, name string) (int, error) {
 	err := db.Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return 0, nil
 }
 func (t Role) UpdateStatus(db *gorm.DB, userId uint32, id int) (int, error) {
 	err := db.Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return 0, nil
@@ -153,14 +157,18 @@ func (t Role) Delete(db *gorm.DB, userId uint32, id int) (int, error) {
 	// }
 	var role Role
 	db = db.Find(&role, id)
+	err := db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
 	db = db.Updates(map[string]interface{}{
 		"is_delete":   1,
 		"delete_time": time.Now().Format("2006-01-02 15:04:05"),
 		"action_id":   userId,
 		"action_time": time.Now().Format("2006-01-02 15:04:05"),
 	})
-	err := db.Error
-	if err != nil {
+	err = db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return 0, nil

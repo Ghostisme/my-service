@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"my-service/global"
 	"my-service/pkg/app"
+	"my-service/pkg/cryptor"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -39,6 +40,20 @@ type UserList struct {
 	RoleId     int    `json:"-" gorm:"Column:role_id"`
 }
 
+type CreateUser struct {
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Status   int    `json:"status"`
+	Mobile   string `json:"mobile"`
+	Addr     string `json:"addr"`
+	Email    string `json:"email"`
+	RoleId   int    `json:"role_id"`
+	IsAdmin  int    `json:"is_admin"`
+}
+
+// type Option *CreateUser
+type Option func(*CreateUser)
+
 type userList struct {
 	List  []*User
 	Pager *app.Pager `json:"pager"`
@@ -48,6 +63,8 @@ type UserInfo struct {
 	*SwaggerSuccess
 	Data *userList `json:"data"`
 }
+
+var serviceSecretKey = "mxalxjzj9oeffag9"
 
 // 查询用户列表集合
 func (t User) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSize int) ([]*UserList, error) {
@@ -67,7 +84,7 @@ func (t User) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSi
 	}
 	db = db.Where("`user`.is_delete = 0")
 	err := db.Find(&user).Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
 	// query := "SELECT `user`.* FROM `user` "
@@ -110,7 +127,7 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 	}
 	db = db.Select("Count(`user`.id)").Where("is_delete = 0")
 	err := db.Find(&user).Count(&count).Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return 0, err
 	}
 	// query := "SELECT Count(`user`.id) as count FROM `user` "
@@ -134,42 +151,125 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 }
 
 // 创建新用户
-func (t User) Create(db *gorm.DB, username, password, mobile, addr, email string, isAdmin, status int) (int, error) {
-	var roleCode string
-	if isAdmin == 0 {
+func WithRegister(username, password string) Option {
+	return func(c *CreateUser) {
+		passWord := cryptor.AesSimpleEncrypt(password, serviceSecretKey)
+		c.UserName = username
+		c.Password = passWord
+		c.Status = 1
+	}
+}
+
+func WithCreate(username, mobile, addr, email string, isAdmin, status int) Option {
+	return func(c *CreateUser) {
+		password := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
+		c.UserName = username
+		c.Password = password
+		c.Mobile = mobile
+		c.Addr = addr
+		c.Email = email
+		c.IsAdmin = isAdmin
+		c.Status = status
+	}
+}
+
+func NewOption(opts ...Option) *CreateUser {
+	user := &CreateUser{}
+	for _, opt := range opts {
+		opt(user)
+	}
+	return user
+}
+
+func (t User) Create(db *gorm.DB, cu *CreateUser) (int, error) {
+	var (
+		roleCode string
+		role     Role
+		// user     UserList
+	)
+	if cu.IsAdmin == 0 {
 		roleCode = "admin"
 	} else {
 		roleCode = "user"
 	}
-	var role Role
 	db = db.Select("id").Where("role_code = ?", roleCode)
+	global.ModelLogger.Info("查询的role_id", role.ID)
 	err := db.Find(&role).Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
-	global.ModelLogger.Info("查询的role_id", role.ID)
-	user := UserList{
-		UserName:   username,
-		Password:   password,
-		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
-		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
-		Mobile:     mobile,
-		Addr:       addr,
-		Email:      email,
-		IsDelete:   0,
-		Status:     status,
-		RoleId:     int(role.ID),
+	if cu.Email != "" || cu.Addr != "" {
+		password := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
+		user := UserList{
+			UserName:   cu.UserName,
+			Password:   password,
+			Mobile:     cu.Mobile,
+			Addr:       cu.Addr,
+			Email:      cu.Email,
+			IsDelete:   0,
+			Status:     cu.Status,
+			CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+			UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+			RoleId:     int(role.ID),
+		}
+		db = db.Omit("ID", "DeleteTime").Create(&user)
+	} else {
+		password := cryptor.AesSimpleEncrypt(cu.Password, serviceSecretKey)
+		user := UserList{
+			UserName:   cu.UserName,
+			Password:   password,
+			IsDelete:   0,
+			Status:     1,
+			CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+			UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+			RoleId:     int(role.ID),
+		}
+		db = db.Omit("DeleteTime", "ID", "Mobile", "Addr", "Email").Create(&user)
 	}
-	db = db.Omit("ID").Create(&user)
 	err = db.Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	return 0, nil
 }
 
 // 编辑用户
-func (t User) Update(db *gorm.DB, id int) (int, error) {
+func (t User) Update(db *gorm.DB, id, status int, username, mobile, email, addr string) (int, error) {
 	var user UserList
 	db = db.Find(&user, id)
+	err := db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
+	db = db.Updates(map[string]interface{}{
+		"username": username,
+		"mobile":   mobile,
+		"email":    email,
+		"addr":     addr,
+		"status":   status,
+	})
+	err = db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
+	return 0, nil
+}
+
+// 删除用户
+func (t User) Del(db *gorm.DB, id int) (int, error) {
+	var user UserList
+	db = db.Find(&user, id)
+	err := db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
+	db = db.Updates(UserList{
+		IsDelete:   1,
+		DeleteTime: time.Now().Format("2006-01-02 15:04:05"),
+	})
+	err = db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
+	return 0, nil
 }

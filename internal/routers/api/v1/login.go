@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var webSecretKey = "qgajvd17wljhaicq"
+var serviceSecretKey = "mxalxjzj9oeffag9"
+
 // @Summer 登录验证
 // @Produce json
 // @Param token header string true "token"
@@ -31,11 +34,9 @@ func Login(c *gin.Context) {
 
 	svc := service.New(c.Request.Context())
 
-	var webSecretKey = "qgajvd17wljhaicq"
 	// 根据前端秘钥进行解密
-	decrypted := cryptor.AesSimpleDecrypt("2jLdyu6zzDZKHJgREyYsEw==", webSecretKey)
+	decrypted := cryptor.AesSimpleDecrypt(param.Password, webSecretKey)
 	// 将解密秘钥结合后端key加密
-	var serviceSecretKey = "mxalxjzj9oeffag9"
 	password := cryptor.AesSimpleEncrypt(decrypted, serviceSecretKey)
 	// fmt.Println("数据库结果", password)
 	user, err := svc.Login(param.UserName, password)

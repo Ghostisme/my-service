@@ -10,32 +10,12 @@ type LoginRequest struct {
 	Password string `form:"password" binding:"required,max=100"`
 }
 
-// func (svc *Service) GetUserByName(userName string) (uint32, error) {
-// 	id, err := svc.dao.GetUserByName(userName)
-// 	if err != nil {
-// 		return 0, err
-// 	}
-
-// 	if id > 0 {
-// 		return id, nil
-// 	}
-
-// 	return 0, errors.New("user does not exist")
-// }
-
-// func (svc *Service) GetUser(userName, Password string) (*model.User, error) {
-// 	// user, err := svc.dao.GetUser(userName, Password)
-// 	// if err != nil {
-// 	// 	return nil, err
-// 	// }
-
-// 	// if id > 0 {
-// 	// 	return id, nil
-// 	// }
-
-// 	return svc.dao.GetUser(userName, Password)
-// }
-
+// 登录
 func (svc *Service) Login(userName, Password string) (*model.User, error) {
 	return svc.dao.Login(userName, Password)
+}
+
+// 注册
+func (svc *Service) Register(userName, Password string) (int, error) {
+	return svc.dao.Register(userName, Password)
 }
