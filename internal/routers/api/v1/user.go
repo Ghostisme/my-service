@@ -63,7 +63,78 @@ func (u User) List(c *gin.Context) {
 // @Param email query string false "邮箱"
 // @Param status query int false "是否启用"
 // @Param is_admin query int false "是否是管理员"
-// @Success 200 {object} model.UserInfo "成功"
+// @Success 200 {object} model.SwaggerSuccess "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/user/save [post]
+func (u User) Create(c *gin.Context) {
+	param := service.UserCreateRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	_, err := svc.CreateUser(&param)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorUserCreateFail)
+		return
+	}
+	response.ToResponseSuccess()
+}
+
+// @Summer 更新用户
+// @Produce json
+// @Param token header string true "token"
+// @Param id query int true "用户id主键"
+// @Param username query string false "用户姓名"
+// @Param mobile query string false "用户联系方式"
+// @Param addr query string false "地址"
+// @Param email query string false "邮箱"
+// @Param status query int false "是否启用"
+// @Success 200 {object} model.SwaggerSuccess "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/user [put]
+func (u User) Update(c *gin.Context) {
+	param := service.UserUpdateRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	_, err := svc.UpdateUser(&param)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorUserUpdateFail)
+		return
+	}
+	response.ToResponseSuccess()
+}
+
+// @Summer 删除用户
+// @Produce json
+// @Param token header string true "token"
+// @Param id query int true "用户id主键"
+// @Success 200 {object} model.SwaggerSuccess "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/user [delete]
+func (u User) Del(c *gin.Context) {
+	param := service.UserDelRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	_, err := svc.DelUser(&param)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorUserDelFail)
+		return
+	}
+	response.ToResponseSuccess()
+}

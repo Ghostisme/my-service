@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	// "context"
 	"log"
 	"my-service/global"
 	"my-service/internal/model"
@@ -16,7 +16,9 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var ctx = context.Background()
+// var (
+// 	ctx = context.Background()
+// )
 
 func setupSetting() error {
 	setting, err := setting.NewSetting()
@@ -60,7 +62,7 @@ func setupRedisEngine() error {
 		Password: global.RedisSettings.RedisPassword,
 		DB:       global.RedisSettings.RedisDB,
 	})
-	_, err = global.RedisClient.Ping(ctx).Result()
+	_, err = global.RedisClient.Ping(global.Ctx).Result()
 	if err != nil {
 		return err
 	}
@@ -115,10 +117,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupSettings err: %v", err)
 	}
-	// err = setupRedisEngine()
-	// if err != nil {
-	// 	log.Fatalf("init.setupRedisEngine err: %v", err)
-	// }
+	err = setupRedisEngine()
+	if err != nil {
+		log.Fatalf("init.setupRedisEngine err: %v", err)
+	}
 	err = setupDBEngine()
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)

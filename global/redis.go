@@ -1,7 +1,12 @@
 package global
 
-import "github.com/go-redis/redis/v8"
+import (
+	"context"
+
+	"github.com/go-redis/redis/v8"
+)
 
 var (
+	Ctx         = context.Background()
 	RedisClient *redis.Client
 )
