@@ -103,6 +103,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	svc := service.New(c.Request.Context())
+
 	err := svc.VerifyCaptchaCode(param.UserName, param.Code, from)
 	if err != nil {
 		response.ToErrorResponse(errcode.ErrorValidCodeFail)
@@ -117,7 +118,7 @@ func Register(c *gin.Context) {
 // @Success 200 {object} CodeResponse "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/register [post]
+// @Router /api/v1/code [post]
 // func GenValidateCode(c *gin.Context) {
 func CreateCode(c *gin.Context) {
 	codeLen := 6
@@ -142,6 +143,8 @@ func CreateCode(c *gin.Context) {
 	// 	response.ToErrorResponse(errcode.ErrorValidCodeFail)
 	// 	return
 	// }
+	// 针对code安全问题加密
+	// newCode := cryptor.AesSimpleEncrypt(code, webSecretKey)
 	response.ToResponse(gin.H{
 		"code": code,
 		"img":  b64s,

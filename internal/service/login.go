@@ -26,6 +26,8 @@ var (
 	store           = base64Captcha.DefaultMemStore
 	errCodeNotExist = errors.New("code not exist")
 	errCodeNotMatch = errors.New("code not match")
+	// webSecretKey     = "qgajvd17wljhaicq"
+	// serviceSecretKey = "mxalxjzj9oeffag9"
 )
 
 // 登录
@@ -69,6 +71,7 @@ func MakeCaptcha(codeLen int) (string, string, error) {
 	c := base64Captcha.NewCaptcha(driver, store)
 	id, b64s, answer, err := c.Generate()
 	global.ServiceLogger.Info("这是什么", answer)
+	global.ServiceLogger.Info("这个id是什么", id)
 	code := GetCodeById(id)
 	return code, b64s, err
 }
@@ -103,6 +106,7 @@ func GetCodeById(id string) string {
 func (svc *Service) VerifyCaptchaCode(tag, inputCode, from string) error {
 	key := GenCaptchaCodeKey(tag, from)
 	code, err := global.RedisClient.Get(global.Ctx, key).Result()
+	global.ServiceLogger.Info("查看当前的code", code)
 	if err != nil {
 		if err == redis.Nil {
 			return errCodeNotExist
@@ -116,7 +120,8 @@ func (svc *Service) VerifyCaptchaCode(tag, inputCode, from string) error {
 		fmt.Printf("redis del fail %v\n", err)
 		return err
 	}
-
+	// 针对输入的inputCode解密
+	// requestCode := cryptor.AesSimpleDecrypt(param.Password, webSecretKey)
 	if inputCode != code {
 		return errCodeNotMatch
 	}
