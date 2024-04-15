@@ -19,3 +19,5 @@
 2024/03/29 16:16:58 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700218678692800}
 2024/03/29 16:17:27 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"api-status\u0026{0xc00063e000 \u003cnil\u003e \u003cnil\u003e true true {0 0} false false false 0x3c72e0}","time":1711700247094027800}
 2024/03/29 16:17:27 {"callers":["D:/go/src/my-service/main.go: 126 main.init.0"],"level":"info","message":"status1","time":1711700247094534500}
+2024/04/11 15:02:12 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"这是什么304574","time":1712818932443055000}
+2024/04/11 15:02:12 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"这个id是什么9g2yOsCdHGyxzrqzker9","time":1712818932444141100}

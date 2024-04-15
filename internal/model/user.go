@@ -151,11 +151,27 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 }
 
 // 创建新用户
-func WithRegister(username, password string) Option {
+// func FunctionFactory(operation int) func(string) Option {
+// 	if operation == 0 {
+// 		return WithUserRegister(username, password)
+// 	} else {
+
+//		}
+//	}
+func WithUserRegister(username, password string) Option {
 	return func(c *CreateUser) {
 		passWord := cryptor.AesSimpleEncrypt(password, serviceSecretKey)
 		c.UserName = username
 		c.Password = passWord
+		c.Status = 1
+	}
+}
+func WithMobileRegister(mobile string) Option {
+	return func(c *CreateUser) {
+		passWord := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
+		c.UserName = mobile
+		c.Password = passWord
+		c.Mobile = mobile
 		c.Status = 1
 	}
 }

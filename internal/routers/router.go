@@ -24,8 +24,10 @@ func NewRouter() *gin.Engine {
 		apiDirect.POST("/login", v1.Login)
 		// 获取验证码
 		apiDirect.POST("/code", v1.CreateCode)
-		// 注册
-		apiDirect.POST("/register", v1.Register)
+		// 手机号注册
+		apiDirect.POST("/register/mobile", v1.RegisterMobile)
+		// 用户名注册
+		apiDirect.POST("/register/user", v1.RegisterUser)
 	}
 	// global.Logger.Infof("查看login接口数据: %v", v1.GetUser)
 	apiV1 := r.Group("api/v1")
@@ -35,8 +37,6 @@ func NewRouter() *gin.Engine {
 	{
 		// 登出
 		apiV1.GET("/logout", v1.Logout)
-		// 注册
-		// apiV1.POST("/register", )
 		// 获取用户列表
 		apiV1.POST("/user", user.List)
 		// 获取角色列表

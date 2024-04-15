@@ -84,17 +84,17 @@ func Logout(c *gin.Context) {
 	response.ToResponseSuccess()
 }
 
-// @Summer 注册
+// @Summer 手机号注册
 // @Produce json
-// @Param username query string true "用户名" maxlength(100)
-// @Param password query string true "密码" maxlength(100)
+// @Param mobile query string true "手机号" maxlength(11)
 // @Param code query string true "验证码" maxlength(6)
 // @Success 200 {object} model.SwaggerSuccess "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/register [post]
-func Register(c *gin.Context) {
-	param := service.RegisterRequest{}
+// @Router /api/v1/register/mobile [post]
+func RegisterMobile(c *gin.Context) {
+	param := service.RegisterMobileRequest{}
+
 	response := app.NewResponse(c)
 
 	valid, errs := app.BindAndValid(c, &param)
@@ -104,12 +104,50 @@ func Register(c *gin.Context) {
 	}
 	svc := service.New(c.Request.Context())
 
-	err := svc.VerifyCaptchaCode(param.UserName, param.Code, from)
+	err := svc.VerifyCaptchaCode(param.Mobile, param.Code, from)
 	if err != nil {
 		response.ToErrorResponse(errcode.ErrorValidCodeFail)
 		return
 	}
+	_, err = svc.RegisterMobile(param.Mobile)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorRegisterFail)
+		return
+	}
+	response.ToResponseSuccess()
+}
 
+// @Summer 用户名注册
+// @Produce json
+// @Param username query string true "用户名" maxlength(100)
+// @Param password query string true "密码" maxlength(100)
+// @Success 200 {object} model.SwaggerSuccess "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/register/user [post]
+func RegisterUser(c *gin.Context) {
+	param := service.RegisterDefaultRequest{}
+
+	response := app.NewResponse(c)
+
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+
+	// 根据前端秘钥进行解密
+	decrypted := cryptor.AesSimpleDecrypt(param.Password, webSecretKey)
+	// 将解密秘钥结合后端key加密
+	password := cryptor.AesSimpleEncrypt(decrypted, serviceSecretKey)
+	_, err := svc.RegisterUser(param.UserName, password)
+	// err := svc.VerifyCaptchaCode(param.UserName, param.Code, from)
+	if err != nil {
+		response.ToErrorResponse(errcode.ErrorRegisterFail)
+		return
+	}
+	response.ToResponseSuccess()
 }
 
 // @Summer 获取验证码

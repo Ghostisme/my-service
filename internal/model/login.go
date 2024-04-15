@@ -45,10 +45,22 @@ func Login(db *gorm.DB, userName, Password string) (*User, error) {
 	return &user, nil
 }
 
-// 用户注册
-func Register(db *gorm.DB, userName, password string) (int, error) {
+// 用户名注册
+func RegisterUser(db *gorm.DB, userName, password string) (int, error) {
 	user := User{}
-	res, err := user.Create(db, NewOption(WithRegister(userName, password)))
+	res, err := user.Create(db, NewOption(WithUserRegister(userName, password)))
+	global.ApiLogger.Info("当前注册调用新增", res)
+	// err = db.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return -1, err
+	}
+	return 0, nil
+}
+
+// 手机号注册
+func RegisterMobile(db *gorm.DB, Mobile string) (int, error) {
+	user := User{}
+	res, err := user.Create(db, NewOption(WithMobileRegister(Mobile)))
 	global.ApiLogger.Info("当前注册调用新增", res)
 	// err = db.Error
 	if err != nil && err != gorm.ErrRecordNotFound {

@@ -16,10 +16,24 @@ type LoginRequest struct {
 	UserName string `form:"username" binding:"required,max=100"`
 	Password string `form:"password" binding:"required,max=100"`
 }
+
 type RegisterRequest struct {
+	UserName string `json:"username" form:"username" binding:"max=100"`
+	Password string `json:"password" form:"password" binding:"max=100"`
+	Mobile   string `json:"mobile" form:"mobile" binding:"max=11"`
+	Code     string `json:"code" form:"code" binding:"max=6"`
+}
+
+type Request func(*RegisterRequest)
+type RegisterDefaultRequest struct {
 	UserName string `form:"username" binding:"required,max=100"`
 	Password string `form:"password" binding:"required,max=100"`
 	Code     string `form:"code" binding:"required,max=6"`
+}
+
+type RegisterMobileRequest struct {
+	Mobile string `form:"mobile" binding:"required,max=11"`
+	Code   string `form:"code" binding:"required,max=6"`
 }
 
 var (
@@ -35,10 +49,24 @@ func (svc *Service) Login(userName, Password string) (*model.User, error) {
 	return svc.dao.Login(userName, Password)
 }
 
-// 注册
-func (svc *Service) Register(userName, Password string) (int, error) {
-	return svc.dao.Register(userName, Password)
+// 用户名注册
+func (svc *Service) RegisterUser(UserName, Password string) (int, error) {
+	return svc.dao.RegisterUser(UserName, Password)
 }
+
+// 手机号注册
+func (svc *Service) RegisterMobile(Mobile string) (int, error) {
+	return svc.dao.RegisterMobile(Mobile)
+}
+
+// 注册
+// func (svc *Service) Register(param *RegisterRequest, status int) (int, error) {
+// 	if status == 0 {
+// 		return svc.dao.RegisterUser(param.UserName, param.Password)
+// 	} else {
+// 		return svc.dao.RegisterMobile(param.Mobile)
+// 	}
+// }
 
 // 创建验证码
 func (svc *Service) CreateCaptcha(tag, from string, ttl, codeLen int) (string, string, error) {
@@ -49,7 +77,6 @@ func (svc *Service) CreateCaptcha(tag, from string, ttl, codeLen int) (string, s
 	}
 	err = global.RedisClient.SetNX(global.Ctx, key, code, time.Duration(ttl)*time.Second).Err()
 	if err != nil {
-		global.ServiceLogger.Info("创建验证码错误信息", err)
 		return "", "", err
 	}
 	return code, b64s, err
@@ -106,7 +133,6 @@ func GetCodeById(id string) string {
 func (svc *Service) VerifyCaptchaCode(tag, inputCode, from string) error {
 	key := GenCaptchaCodeKey(tag, from)
 	code, err := global.RedisClient.Get(global.Ctx, key).Result()
-	global.ServiceLogger.Info("查看当前的code", code)
 	if err != nil {
 		if err == redis.Nil {
 			return errCodeNotExist
@@ -120,11 +146,33 @@ func (svc *Service) VerifyCaptchaCode(tag, inputCode, from string) error {
 		fmt.Printf("redis del fail %v\n", err)
 		return err
 	}
-	// 针对输入的inputCode解密
-	// requestCode := cryptor.AesSimpleDecrypt(param.Password, webSecretKey)
 	if inputCode != code {
 		return errCodeNotMatch
 	}
 
 	return nil
 }
+
+// func NewResquest(opts ...Request) *RegisterRequest {
+// 	request := &RegisterRequest{}
+// 	for _, opt := range opts {
+// 		opt(request)
+// 	}
+// 	return request
+// }
+
+// 手机号注册
+// func WithMobileRegister(mobile, code string) Request {
+// 	return func(c *RegisterRequest) {
+// 		c.Mobile = mobile
+// 		c.Code = code
+// 	}
+// }
+
+// 用户名注册
+// func WithUserRegister(username, password string) Request {
+// 	return func(c *RegisterRequest) {
+// 		c.UserName = username
+// 		c.Password = password
+// 	}
+// }
