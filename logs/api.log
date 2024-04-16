@@ -59,3 +59,5 @@
 2024/04/16 14:17:18 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"当前注册调用新增0","time":1713248238480147700}
 2024/04/16 14:19:03 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"当前用户信息{\u003cnil\u003e 15202270460 PlYGZTo4ew1+OQT3XOaJyA== 2024-04-16 14:19:03 2024-04-16 14:19:03  1 15202270460   0 2}","time":1713248343286940400}
 2024/04/16 14:19:03 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"当前注册调用新增0","time":1713248343346097600}
+2024/04/16 14:58:05 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"当前用户信息{\u003cnil\u003e test PlYGZTo4ew1+OQT3XOaJyA== 2024-04-16 14:58:05 2024-04-16 14:58:05  1 test   0 2}","time":1713250685476251700}
+2024/04/16 14:58:05 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"当前注册调用新增0","time":1713250685530527800}

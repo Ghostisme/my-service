@@ -65,3 +65,4 @@
 2024/04/16 14:00:45 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"查询的role_id0","time":1713247245393868600}
 2024/04/16 14:17:18 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"创建手机注册表单PlYGZTo4ew1+OQT3XOaJyA==","time":1713248238315114300}
 2024/04/16 14:19:03 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"创建手机注册表单PlYGZTo4ew1+OQT3XOaJyA==","time":1713248343257104300}
+2024/04/16 14:58:05 {"callers":["D:/go/src/my-service/main.go: 128 main.init.0"],"level":"info","message":"创建用户表单","time":1713250685451063800}
