@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"my-service/global"
 	"my-service/pkg/app"
 	"my-service/pkg/cryptor"
 	"time"
@@ -65,6 +64,11 @@ type UserInfo struct {
 }
 
 var serviceSecretKey = "mxalxjzj9oeffag9"
+
+// 为UserList绑定表名
+func (t UserList) TableName() string {
+	return "user"
+}
 
 // 查询用户列表集合
 func (t User) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSize int) ([]*UserList, error) {
@@ -151,28 +155,25 @@ func (t User) ListCount(db *gorm.DB, beginTime, endTime, keyWord string) (int, e
 }
 
 // 创建新用户
-// func FunctionFactory(operation int) func(string) Option {
-// 	if operation == 0 {
-// 		return WithUserRegister(username, password)
-// 	} else {
-
-//		}
-//	}
 func WithUserRegister(username, password string) Option {
 	return func(c *CreateUser) {
-		passWord := cryptor.AesSimpleEncrypt(password, serviceSecretKey)
 		c.UserName = username
-		c.Password = passWord
+		c.Password = password
+		c.Mobile = ""
+		c.Email = ""
+		c.Addr = ""
 		c.Status = 1
+		c.IsAdmin = 1
 	}
 }
 func WithMobileRegister(mobile string) Option {
 	return func(c *CreateUser) {
-		passWord := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
+		password := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
 		c.UserName = mobile
-		c.Password = passWord
+		c.Password = password
 		c.Mobile = mobile
 		c.Status = 1
+		c.IsAdmin = 1
 	}
 }
 
@@ -198,27 +199,22 @@ func NewOption(opts ...Option) *CreateUser {
 }
 
 func (t User) Create(db *gorm.DB, cu *CreateUser) (int, error) {
-	var (
-		roleCode string
-		role     Role
-		// user     UserList
-	)
+	var roleCode string
+	role := Role{}
 	if cu.IsAdmin == 0 {
 		roleCode = "admin"
 	} else {
 		roleCode = "user"
 	}
-	db = db.Select("id").Where("role_code = ?", roleCode)
-	global.ModelLogger.Info("查询的role_id", role.ID)
-	err := db.Find(&role).Error
+	db = db.Where("role_code = ?", roleCode).First(&role)
+	err := db.Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return -1, err
 	}
 	if cu.Email != "" || cu.Addr != "" {
-		password := cryptor.AesSimpleEncrypt("123456", serviceSecretKey)
 		user := UserList{
 			UserName:   cu.UserName,
-			Password:   password,
+			Password:   cu.Password,
 			Mobile:     cu.Mobile,
 			Addr:       cu.Addr,
 			Email:      cu.Email,
@@ -230,17 +226,31 @@ func (t User) Create(db *gorm.DB, cu *CreateUser) (int, error) {
 		}
 		db = db.Omit("ID", "DeleteTime").Create(&user)
 	} else {
-		password := cryptor.AesSimpleEncrypt(cu.Password, serviceSecretKey)
-		user := UserList{
-			UserName:   cu.UserName,
-			Password:   password,
-			IsDelete:   0,
-			Status:     1,
-			CreateTime: time.Now().Format("2006-01-02 15:04:05"),
-			UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
-			RoleId:     int(role.ID),
+		if cu.Mobile != "" {
+			user := UserList{
+				UserName:   cu.UserName,
+				Password:   cu.Password,
+				Mobile:     cu.UserName,
+				IsDelete:   0,
+				Status:     1,
+				CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+				UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+				RoleId:     int(role.ID),
+			}
+			db = db.Omit("DeleteTime", "ID", "Addr", "Email").Create(&user)
+		} else {
+			user := UserList{
+				UserName:   cu.UserName,
+				Password:   cu.Password,
+				Mobile:     cu.Mobile,
+				IsDelete:   0,
+				Status:     1,
+				CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+				UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+				RoleId:     int(role.ID),
+			}
+			db = db.Omit("DeleteTime", "ID", "Addr", "Email").Create(&user)
 		}
-		db = db.Omit("DeleteTime", "ID", "Mobile", "Addr", "Email").Create(&user)
 	}
 	err = db.Error
 	if err != nil && err != gorm.ErrRecordNotFound {

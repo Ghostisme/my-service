@@ -28,7 +28,6 @@ type Request func(*RegisterRequest)
 type RegisterDefaultRequest struct {
 	UserName string `form:"username" binding:"required,max=100"`
 	Password string `form:"password" binding:"required,max=100"`
-	Code     string `form:"code" binding:"required,max=6"`
 }
 
 type RegisterMobileRequest struct {

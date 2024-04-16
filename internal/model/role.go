@@ -31,6 +31,11 @@ type RoleInfo struct {
 	Data *roleList `json:"data"`
 }
 
+// 为Role绑定表名
+func (t Role) TableName() string {
+	return "role"
+}
+
 // 查询角色列表
 func (t Role) List(db *gorm.DB, beginTime, endTime, keyWord string, page, pageSize int) ([]*Role, error) {
 	var role []*Role
